@@ -461,11 +461,14 @@
   </div>
   © 2025 Crepe Magique | Made with ❤️
 </footer>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+	
+<!-- Firebase (non-module, simple version) -->
+<script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js"></script>
 
+<script>
+  // Initialize Firebase (classic way)
   const firebaseConfig = {
     apiKey: "AIzaSyB6DxMKy1y28t4xtvw0SMcx3K4pivB7grw",
     authDomain: "crepe-magique.firebaseapp.com",
@@ -476,16 +479,11 @@
     measurementId: "G-J3S8GPYLMD"
   };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  const db = getDatabase(app);
-
-  // ✅ Make these functions visible to your main script
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
   window.db = db;
-  window.ref = ref;
-  window.push = push;
 </script>
+
 
 
 <script>
@@ -756,9 +754,9 @@ function submitOrder() {
   };
 
   // Push to Firebase Realtime Database
-  const db = window.db;
-  const ordersRef = ref(db, 'orders');
-  push(ordersRef, newOrder)
+  const ordersRef = window.db.ref('orders');
+  ordersRef.push(newOrder)
+
     .then(() => {
       console.log("Order saved to Firebase ");
       cart = [];
@@ -835,6 +833,7 @@ displayReviews();
 	
 </body>
 </html>
+
 
 
 
