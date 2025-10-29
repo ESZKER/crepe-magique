@@ -461,33 +461,11 @@
   </div>
   © 2025 Crepe Magique | Made with ❤️
 </footer>
-	
-<!-- Firebase (non-module, simple version) -->
-<script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js"></script>
-
-<script>
-  // Initialize Firebase (classic way)
-  const firebaseConfig = {
-    apiKey: "AIzaSyB6DxMKy1y28t4xtvw0SMcx3K4pivB7grw",
-    authDomain: "crepe-magique.firebaseapp.com",
-    projectId: "crepe-magique",
-    storageBucket: "crepe-magique.firebasestorage.app",
-    messagingSenderId: "175773010517",
-    appId: "1:175773010517:web:170168816a70efa825a2dc",
-    measurementId: "G-J3S8GPYLMD"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-  window.db = db;
-</script>
-
-
 
 <script>
 // --- Stock Limit Feature (persistent & admin-controlled) ---
+
+
 // Safely load existing stock from localStorage
 let stockRaw = localStorage.getItem('stock');
 let stock;
@@ -731,47 +709,35 @@ function renderCart() {
 
 
 function clearCart(){ if(confirm("Clear your cart?")){ cart=[]; renderCart(); } }
-function submitOrder() {
-  const name = document.getElementById('customerName').value.trim();
-  const phone = document.getElementById('customerPhone').value.trim();
-  const year = document.getElementById('yearSelect').value;
-  const pickupTime = document.getElementById('pickupTime').value;
-
-  if (!name || !phone || !year || !pickupTime || cart.length === 0) {
+function submitOrder(){
+  const name=document.getElementById('customerName').value.trim();
+  const phone=document.getElementById('customerPhone').value.trim();
+  const year=document.getElementById('yearSelect').value;
+  const pickupTime=document.getElementById('pickupTime').value;
+  if(!name || !phone || !year || !pickupTime || cart.length===0){
     alert('Please fill out all fields and add items.');
     return;
   }
+  const total=cart.reduce((t,i)=>t+i.price*i.quantity,0);
+  const orders=JSON.parse(localStorage.getItem('orders')||'[]');
+  orders.push({name, phone, year, pickupTime, total, items: cart, time:new Date().toLocaleString()});
+ 
+  localStorage.setItem('orders', JSON.stringify(orders));
+  localStorage.setItem('stock', JSON.stringify(stock));
+  window.addEventListener("storage", () => {
+  stock = JSON.parse(localStorage.getItem('stock') || '{}');
+  updateStockDisplay();
+});
 
-  const total = cart.reduce((t, i) => t + i.price * i.quantity, 0);
-  const newOrder = {
-    name,
-    phone,
-    year,
-    pickupTime,
-    total,
-    items: cart,
-    time: new Date().toLocaleString(),
-  };
+  updateStockDisplay();
+  cart = [];
+  renderCart();
 
-  // Push to Firebase Realtime Database
-  const ordersRef = window.db.ref('orders');
-  ordersRef.push(newOrder)
+const msg = document.getElementById('thankyouBox');
+msg.style.display = 'block';
+setTimeout(() => msg.style.display = 'none', 4000);
 
-    .then(() => {
-      console.log("Order saved to Firebase ");
-      cart = [];
-      renderCart();
-      updateStockDisplay();
-      const msg = document.getElementById('thankyouBox');
-      msg.style.display = 'block';
-      setTimeout(() => msg.style.display = 'none', 4000);
-    })
-    .catch((error) => {
-      console.error(" Failed to save order:", error);
-      alert("Failed to submit order. Please try again.");
-    });
 }
-
 
 // --- Admin Dashboard ---
 document.getElementById('viewOrdersBtn').addEventListener('click',()=>{
@@ -830,13 +796,6 @@ function displayReviews(){
 
 displayReviews();
 </script>
-	
+
 </body>
 </html>
-
-
-
-
-
-
-
