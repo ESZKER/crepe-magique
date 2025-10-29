@@ -155,7 +155,6 @@ tr.completed { text-decoration: line-through; opacity: 0.6; }
   const analytics = getAnalytics(app);
   const db = getDatabase(app);
 
-  // Make these functions visible to your main script
   window.db = db;
   window.ref = ref;
   window.push = push;
@@ -228,7 +227,7 @@ function deleteOrder(orderId) {
   remove(orderRef);
 }
 
-// --- Clear Orders + Record Revenue (fixed version) ---
+// --- Clear Orders + Record Revenue  ---
 document.getElementById("clearOrders").addEventListener("click", () => {
   const orders = safeParse(localStorage.getItem("orders"), []);
   if (!orders.length) {
@@ -250,10 +249,10 @@ document.getElementById("clearOrders").addEventListener("click", () => {
       const qty = Number(i.quantity) || 0;
       let toppingCost = 0;
 
-      // Calculate topping price if toppings exist
+      // Calculate topping price 
       if (Array.isArray(i.toppings) && i.toppings.length) {
         i.toppings.forEach(t => {
-          // Extract numbers in parentheses e.g. (៛500)
+          // Extract numbers in parentheses 
           const match = String(t).match(/\d+/);
           const extra = match ? Number(match[0]) : 0;
           toppingCost += extra;
@@ -268,7 +267,7 @@ document.getElementById("clearOrders").addEventListener("click", () => {
 
       if (Array.isArray(i.toppings)) {
         i.toppings.forEach(t => {
-          const toppingLabel = String(t).replace(/\s*\(៛?\d+\)/, ""); // remove "(៛500)"
+          const toppingLabel = String(t).replace(/\s*\(៛?\d+\)/, ""); 
           const combo = `${itemName} (+${toppingLabel})`;
           soldItems[combo] = (soldItems[combo] || 0) + qty;
         });
@@ -301,8 +300,8 @@ localStorage.setItem("revenueLog_backup", JSON.stringify(updatedLog));
 
 
   // --- Clear all orders and backups properly ---
-  localStorage.setItem("orders", JSON.stringify([]));         // reset orders
-  localStorage.setItem("orders_backup", JSON.stringify([]));  // reset backup too
+  localStorage.setItem("orders", JSON.stringify([]));         
+  localStorage.setItem("orders_backup", JSON.stringify([]));  
   
 
   // Refresh dashboard displays
@@ -398,21 +397,20 @@ document.getElementById("backBtn").addEventListener("click", () => {
 
 // --- Restore Local Backup if Empty ---
 function restoreDataFromBackup() {
-  // Restore revenue if missing but backup exists
   const revenue = localStorage.getItem("revenueLog");
   const revenueBackup = localStorage.getItem("revenueLog_backup");
   if (!revenue && revenueBackup) {
     localStorage.setItem("revenueLog", revenueBackup);
   }
 
-  // Restore orders if missing but backup exists
+  // Restore orders if missing 
   const orders = localStorage.getItem("orders");
   const ordersBackup = localStorage.getItem("orders_backup");
   if (!orders && ordersBackup) {
     localStorage.setItem("orders", ordersBackup);
   }
 
-  // Restore reviews if missing but backup exists
+  // Restore reviews if missing 
   const reviews = localStorage.getItem("reviews");
   const reviewsBackup = localStorage.getItem("reviews_backup");
   if (!reviews && reviewsBackup) {
@@ -420,7 +418,7 @@ function restoreDataFromBackup() {
   }
 }
 
-// --- Manual Reset Stock Button (improved: persistent + cross-tab notify) ---
+// --- Manual Reset Stock Button  ---
 document.getElementById("resetStockBtn").addEventListener("click", () => {
   if (!confirm("Are you sure you want to reset all stock to 20 each?")) return;
 
@@ -440,7 +438,6 @@ document.getElementById("resetStockBtn").addEventListener("click", () => {
   try {
     const bc = new BroadcastChannel('crepe_channel');
     bc.postMessage({ type: 'stock_update', stock: newStock, ts: Date.now() });
-    // closing channel is optional; we close to be tidy
     bc.close();
   } catch (err) {
     // BroadcastChannel may not be supported in very old browsers — ignore safely
@@ -482,7 +479,7 @@ window.addEventListener("beforeunload", () => {
   if (reviews) localStorage.setItem("reviews_backup", reviews);
 });
 
-// 🔧 Fix: Instantly refresh menu when stock is reset in dashboard
+//  Fix: Instantly refresh menu when stock is reset in dashboard
 window.addEventListener("storage", (e) => {
   if (e.key === "stock_update_ts") {
     try {
@@ -500,5 +497,6 @@ window.addEventListener("storage", (e) => {
 </script>
 </body>
 </html>
+
 
 
