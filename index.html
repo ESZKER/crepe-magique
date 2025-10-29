@@ -490,8 +490,7 @@
 </script>
 
 <script>
-// --- Stock Limit Feature (persistent & admin-controlled) ---
-// Safely load existing stock from localStorage
+// --- Stock Limit Feature ---
 let stockRaw = localStorage.getItem('stock');
 let stock;
 try {
@@ -539,7 +538,7 @@ try {
       }
     }
   });
-  // We won't close here — keep open to receive more updates while page is active
+  
 } catch (err) {
   console.warn('BroadcastChannel not supported on this browser:', err);
 }
@@ -604,7 +603,7 @@ function updateStockDisplay() {
   const crepeSold = getSoldCount('French Crepe');
   const buchimgaeSold = getSoldCount('Buchimgae');
 
-  // Safely count items still in the current cart (may be 0 right after submit)
+  // Safely count items still in the current cart 
   const crepeInCart = Array.isArray(cart)
     ? cart.filter(i => i.item === 'French Crepe').reduce((t, i) => t + i.quantity, 0)
     : 0;
@@ -815,7 +814,7 @@ function submitReview(){
 
 }
 
-// Hide written comments on menu page (keep only average rating)
+// Hide written comments on menu page 
 function displayReviews(){
   const reviews = JSON.parse(localStorage.getItem('reviews') || '[]');
   if (reviews.length === 0) return;
@@ -825,7 +824,6 @@ function displayReviews(){
   displayAvg.style.display = 'block';
   displayAvg.textContent = `Average Rating: ${avg}  (${reviews.length} reviews)`;
 
-  // Hide written customer comments under the menu
   const commentsDiv = document.getElementById('reviewComments');
   commentsDiv.style.display = 'none';
   commentsDiv.innerHTML = '';
@@ -836,6 +834,7 @@ displayReviews();
 	
 </body>
 </html>
+
 
 
 
