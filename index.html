@@ -757,7 +757,7 @@ function submitOrder() {
   };
 
   // Push to Firebase Realtime Database
-  const db = getDatabase();
+  const db = window.db;
   const ordersRef = ref(db, 'orders');
   push(ordersRef, newOrder)
     .then(() => {
@@ -836,6 +836,7 @@ displayReviews();
 	
 </body>
 </html>
+
 
 
 
