@@ -135,57 +135,99 @@ tr.completed { text-decoration: line-through; opacity: 0.6; }
   </section>
 </main>
 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB6DxMKy1y28t4xtvw0SMcx3K4pivB7grw",
+    authDomain: "crepe-magique.firebaseapp.com",
+    projectId: "crepe-magique",
+    storageBucket: "crepe-magique.firebasestorage.app",
+    messagingSenderId: "175773010517",
+    appId: "1:175773010517:web:170168816a70efa825a2dc",
+    measurementId: "G-J3S8GPYLMD"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getDatabase(app);
+
+  // Make these functions visible to your main script
+  window.db = db;
+  window.ref = ref;
+  window.push = push;
+</script>
+
 <script>
 // --- Utility ---
 function safeParse(json, fallback) {
   try { return JSON.parse(json); } catch { return fallback; }
 }
 
-// --- Load Orders ---
+// --- Load Orders from Firebase ---
 function loadOrders() {
-  const orders = safeParse(localStorage.getItem("orders"), []);
   const tbody = document.querySelector("#ordersTable tbody");
-  tbody.innerHTML = "";
+  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Loading...</td></tr>';
 
-  if (!orders.length) {
-    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No orders yet.</td></tr>';
-    return;
-  }
+  const db = getDatabase();
+  const ordersRef = ref(db, 'orders');
 
-  orders.forEach((order, index) => {
-    const tr = document.createElement("tr");
-    if (order.completed) tr.classList.add("completed");
+  onValue(ordersRef, (snapshot) => {
+    const data = snapshot.val();
+    tbody.innerHTML = '';
 
-    let orderDetails = "";
-    if (Array.isArray(order.items)) {
-      orderDetails = order.items.map(item => {
-        const toppings = item.toppings?.length ? `<small>+ ${item.toppings.join(", ")}</small>` : "";
-        return `${item.item} ×${item.quantity}${toppings}`;
-      }).join("<br>");
+    if (!data) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No orders yet.</td></tr>';
+      return;
     }
 
-    tr.innerHTML = `
-      <td>${order.name || ""}</td>
-      <td>${order.phone || "—"}</td>
-      <td>${order.year || ""}</td>
-      <td>${orderDetails}</td>
-      <td>${(order.total || 0).toLocaleString()}</td>
-      <td>${order.time || ""}</td>
-      <td>${order.pickupTime || order.deliveryTime || "—"}</td>
-      <td><button class="action-btn" onclick="toggleComplete(${index})">${order.completed ? "Undo" : "Done"}</button></td>
-    `;
-    tbody.appendChild(tr);
+    const orders = Object.entries(data);
+    orders.forEach(([key, order], index) => {
+      const tr = document.createElement("tr");
+
+      const orderDetails = Array.isArray(order.items)
+        ? order.items.map(item => {
+            const toppings = item.toppings?.length ? `<small>+ ${item.toppings.join(", ")}</small>` : "";
+            return `${item.item} ×${item.quantity}${toppings}`;
+          }).join("<br>")
+        : "";
+
+      tr.innerHTML = `
+        <td>${order.name || ""}</td>
+        <td>${order.phone || "—"}</td>
+        <td>${order.year || ""}</td>
+        <td>${orderDetails}</td>
+        <td>${(order.total || 0).toLocaleString()}</td>
+        <td>${order.time || ""}</td>
+        <td>${order.pickupTime || "—"}</td>
+        <td>
+          <button class="action-btn" onclick="markComplete('${key}')">Done</button>
+          <button class="action-btn" style="background:#b84f3c;" onclick="deleteOrder('${key}')">Delete</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
   });
 }
 
-function toggleComplete(index) {
-  const orders = safeParse(localStorage.getItem("orders"), []);
-  if (orders[index]) {
-    orders[index].completed = !orders[index].completed;
-    localStorage.setItem("orders", JSON.stringify(orders));
-    loadOrders();
-  }
+// --- Mark Order Complete ---
+function markComplete(orderId) {
+  const db = getDatabase();
+  const orderRef = ref(db, 'orders/' + orderId);
+  update(orderRef, { completed: true });
 }
+
+// --- Delete Order ---
+function deleteOrder(orderId) {
+  if (!confirm("Delete this order?")) return;
+  const db = getDatabase();
+  const orderRef = ref(db, 'orders/' + orderId);
+  remove(orderRef);
+}
+
 // --- Clear Orders + Record Revenue (fixed version) ---
 document.getElementById("clearOrders").addEventListener("click", () => {
   const orders = safeParse(localStorage.getItem("orders"), []);
@@ -455,7 +497,8 @@ window.addEventListener("storage", (e) => {
     }
   }
 });
-
 </script>
 </body>
 </html>
+
+
