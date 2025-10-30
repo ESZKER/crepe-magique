@@ -1,144 +1,254 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title> Orders Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crepe Magique</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 <style>
-body {
-  font-family: "Poppins", sans-serif;
-  background-color: #fffaf7;
-  color: #4b2e2b;
-  margin: 0;
-  padding: 0;
-}
-header {
-  background-color: #d7b89c;
-  padding: 10px 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-header h1 { margin: 0; font-size: 1.5em; }
-button {
-  background-color: #4b2e2b;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: inherit;
-}
-main { padding: 20px; }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
-th, td {
-  border: 1px solid #d7b89c;
-  padding: 10px;
-  text-align: left;
-  vertical-align: top;
-}
-th { background-color: #7a4f4b; color: white; }
-tr:nth-child(even) { background: #f8f1ec; }
-tr.completed { text-decoration: line-through; opacity: 0.6; }
-.action-btn {
-  background: #c9a07b;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 8px;
-  cursor: pointer;
-}
-.review-section {
-  margin-top: 50px;
-  background-color: #fff2e8;
-  border-top: 2px solid #d7b89c;
-  padding: 20px;
-  border-radius: 10px;
-}
-.review-section h2 { margin-top: 0; }
-.review {
-  background-color: #fff;
-  border: 1px solid #d7b89c;
-  border-radius: 8px;
-  padding: 10px;
-  margin: 10px 0;
-}
-.review button {
-  background-color: #b84f3c;
-  padding: 4px 8px;
-  font-size: 0.8em;
-}
-#revenueTable { margin-top: 30px; border: 1px solid #d7b89c; }
-#revenueTable th, #revenueTable td {
-  border: 1px solid #d7b89c;
-  padding: 8px;
-}
-#revenueTable th { background-color: #7a4f4b; color: white; }
-#revenueTable td { background-color: #fdf5f0; color: #4b2e2b; }
-@media (max-width:600px){
-  table, th, td { font-size: 0.85em; }
-}
+  body {
+    font-family: "Poppins", sans-serif;
+    background-color: #fffaf7;
+    color: #4b2e2b;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 120px;
+  }
+  header img {
+    height: 140px;
+    width: auto;
+  }
+  button#viewOrdersBtn {
+    background: none;
+    border: none;
+    color: #4b2e2b;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .banner {
+    height: 50vh;
+    background-image: url('images/Banner.png');
+    background-size: cover;
+    background-position: center;
+  }
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #3a1e1b;
+  }
+  main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 30px 50px;
+  }
+  .menu {
+    flex: 2;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .item {
+    background-color: #fff;
+    border: 1px solid #e0cfc2;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s;
+  }
+  .item:hover { transform: translateY(-3px); }
+  .item img {
+    width: 100%;
+    border-radius: 12px;
+    height: 160px;
+    object-fit: cover;
+  }
+  .item h2 { font-size: 18px; }
+  .item p { font-size: 13px; color: #6a4a42; }
+  .item button {
+    background-color: #c9a07b;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .cart {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #e0cfc2;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 20px;
+  }
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fdf8f5;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #e0cfc2;
+    margin-bottom: 10px;
+  }
+  .quantity-btn {
+    background-color: #d4b7a2;
+    border: none;
+    border-radius: 6px;
+    color: #4b2e2b;
+    font-weight: bold;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+  }
+  .submit-btn, .clear-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: 600;
+  }
+  .submit-btn { background: #4b2e2b; color: white; }
+  .clear-btn { background: #d4b7a2; color: #4b2e2b; }
+  footer {
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+    background-color: #f5e7d8;
+    margin-top: 30px;
+  }
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 320px;
+    text-align: center;
+  }
+  .rating .star {
+    font-size: 28px;
+    color: #b88;
+    cursor: pointer;
+    transition: transform 0.3s, color 0.3s;
+  }
+  .rating .star:hover, .rating .star.selected { color: #ffb400; transform: scale(1.2); }
 </style>
 </head>
 <body>
+
 <header>
-  <h1>Crepe Magique – Orders Dashboard</h1>
-  <div>
-    <button id="backBtn">⬅ Back to Menu</button>
-    <button id="clearOrders">Clear All Orders</button>
-    <button id="resetStockBtn" style="background:#8b5e3c;">Reset Stock</button>
+  <div style="display:flex;align-items:center;gap:15px;">
+    <img src="images/logo.png" alt="Crepe Magique Logo">
+    <h1 style="font-family:'Playfair Display',serif;">Crepe Magique</h1>
   </div>
+  <button id="viewOrdersBtn">Dashboard (Admins Only)</button>
 </header>
 
+<section class="banner"></section>
+
+<h1>Our Special Menu ❤️</h1>
+
 <main>
-  <!-- Orders Table -->
-  <table id="ordersTable">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Phone</th>
-        <th>Year/Staff</th>
-        <th>Order</th>
-        <th>Total (៛)</th>
-        <th>Order Time</th>
-        <th>Delivery Time</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div class="menu">
+    <div class="item">
+      <img src="images/menu-1.jpg" alt="French Crepe">
+      <h2>French Crepe – ៛3500</h2>
+      <p>Soft and golden crepe drizzled with rich chocolate and creamy condensed milk.</p>
+      <button onclick="openToppingModal()">Add to Order</button>
+      <span id="crepeStock" style="color:green;font-weight:600;">(Loading...)</span>
+    </div>
+    <div class="item">
+      <img src="images/menu-2.jpg" alt="Buchimgae">
+      <h2>Buchimgae – ៛6000</h2>
+      <p>Crispy Korean-style pancake made with vegetables, pan-fried to perfection.</p>
+      <button onclick="addToCart('Buchimgae',6000)">Add to Order</button>
+      <span id="buchimgaeStock" style="color:green;font-weight:600;">(Loading...)</span>
+    </div>
+  </div>
 
-  <!-- Revenue Summary -->
-  <section class="review-section">
-    <h2>Revenue Summary</h2>
-    <table id="revenueTable">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Total Revenue (៛)</th>
-          <th>Items Sold</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
-
-  <!-- Customer Reviews -->
-  <section class="review-section">
-    <h2>Customer Reviews (<span id="reviewCount">0</span>)</h2>
-    <div id="reviewsList"></div>
-  </section>
+  <div class="cart">
+    <h2>Your Order</h2>
+    <div id="cartItems"></div>
+    <p><strong>Total: ៛<span id="cartTotal">0</span></strong></p>
+    <input type="text" id="customerName" placeholder="Your Name">
+    <input type="tel" id="customerPhone" placeholder="Phone">
+    <select id="yearSelect">
+      <option value="">Select Year</option>
+      <option>IP Student</option><option>Year 1</option>
+      <option>Year 2</option><option>Year 3</option><option>Year 4</option><option>Staff</option>
+    </select>
+    <select id="pickupTime">
+      <option value="">Pickup Time</option>
+      <option>12:00-1:00pm</option><option>5:00-6:00pm</option>
+    </select>
+    <button class="submit-btn" onclick="submitOrder()">Submit Order</button>
+    <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+    <div id="thankyouBox" style="display:none;color:green;">Thank you! Please pay at the counter.</div>
+  </div>
 </main>
 
+<!-- Topping Modal -->
+<div id="toppingModal" class="modal">
+  <div class="modal-content">
+    <h3>Select Toppings</h3>
+    <div id="toppingOptions">
+      <label><input type="checkbox" value="Chocolate Sauce (៛500)" data-price="500"> Chocolate Sauce</label><br>
+      <label><input type="checkbox" value="Condensed Milk (៛500)" data-price="500"> Condensed Milk</label><br>
+      <label><input type="checkbox" value="Icing Sugar (FREE)" data-price="0"> Icing Sugar</label>
+    </div>
+    <button onclick="confirmToppings()">Add to Cart</button>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div id="reviewModal" class="modal">
+  <div class="modal-content">
+    <h3>Rate Us ❤️</h3>
+    <div class="rating" id="ratingStars"></div>
+    <textarea id="reviewComment" placeholder="Leave a comment..."></textarea>
+    <button onclick="submitReview()">Submit Review</button>
+  </div>
+</div>
+
+<footer>
+  <button onclick="openReviewModal()" style="background:#b88;color:white;border:none;padding:8px 12px;border-radius:8px;">Rate us ⭐⭐⭐⭐⭐</button>
+  <div id="avgRatingDisplay"></div>
+  <div id="reviewComments"></div>
+  © 2025 Crepe Magique
+</footer>
+
+<!-- Firebase -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
-  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+  import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyB6DxMKy1y28t4xtvw0SMcx3K4pivB7grw",
@@ -147,358 +257,112 @@ tr.completed { text-decoration: line-through; opacity: 0.6; }
     storageBucket: "crepe-magique.firebasestorage.app",
     messagingSenderId: "175773010517",
     appId: "1:175773010517:web:170168816a70efa825a2dc",
-    measurementId: "G-J3S8GPYLMD"
+    measurementId: "G-J3S8GPYLMD",
+    databaseURL: "https://crepe-magique-default-rtdb.asia-southeast1.firebasedatabase.app"
   };
 
-  // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
   const db = getDatabase(app);
 
-  // Make these functions visible to your main script
-  window.db = db;
-  window.ref = ref;
-  window.push = push;
-</script>
+  let cart = [];
+  let stock = { "French Crepe": 0, "Buchimgae": 0 };
 
-<script>
-// --- Utility ---
-function safeParse(json, fallback) {
-  try { return JSON.parse(json); } catch { return fallback; }
-}
+  const stockRef = ref(db, "stock");
+  onValue(stockRef, (snapshot) => {
+    stock = snapshot.val() || stock;
+    document.getElementById("crepeStock").textContent = `(${stock["French Crepe"]} left)`;
+    document.getElementById("buchimgaeStock").textContent = `(${stock["Buchimgae"]} left)`;
+  });
 
-// --- Load Orders from Firebase ---
-function loadOrders() {
-  const tbody = document.querySelector("#ordersTable tbody");
-  tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Loading...</td></tr>';
+  function openToppingModal() { document.getElementById("toppingModal").style.display = "flex"; }
+  function confirmToppings() {
+    const checks = document.querySelectorAll("#toppingOptions input:checked");
+    const toppings = Array.from(checks).map(c => c.value);
+    const price = 3500 + Array.from(checks).reduce((s,c)=>s+Number(c.dataset.price),0);
+    addToCart("French Crepe", price, toppings);
+    document.getElementById("toppingModal").style.display = "none";
+    checks.forEach(c => c.checked=false);
+  }
 
-  const db = getDatabase();
-  const ordersRef = ref(db, 'orders');
+  function addToCart(item, price, toppings=[]) {
+    if (stock[item] <= 0) { alert("Sold out!"); return; }
+    const exist = cart.find(i => i.item === item && JSON.stringify(i.toppings)===JSON.stringify(toppings));
+    if (exist) exist.quantity++; else cart.push({item, price, quantity:1, toppings});
+    renderCart();
+  }
 
-  onValue(ordersRef, (snapshot) => {
-    const data = snapshot.val();
-    tbody.innerHTML = '';
+  function renderCart() {
+    const div = document.getElementById("cartItems");
+    div.innerHTML = cart.map((i,idx)=>`
+      <div class="cart-item">
+        <div>${i.item}<br><small>${i.toppings.join(", ")}</small></div>
+        <div>៛${i.price}</div>
+        <div><button class="quantity-btn" onclick="changeQty(${idx},-1)">–</button>${i.quantity}<button class="quantity-btn" onclick="changeQty(${idx},1)">+</button></div>
+      </div>`).join("");
+    document.getElementById("cartTotal").textContent = cart.reduce((t,i)=>t+i.price*i.quantity,0);
+  }
 
-    if (!data) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">No orders yet.</td></tr>';
-      return;
-    }
+  function changeQty(i,delta){
+    cart[i].quantity+=delta;
+    if(cart[i].quantity<=0)cart.splice(i,1);
+    renderCart();
+  }
 
-    const orders = Object.entries(data);
-    orders.forEach(([key, order], index) => {
-      const tr = document.createElement("tr");
+  window.clearCart=()=>{cart=[];renderCart();}
 
-      const orderDetails = Array.isArray(order.items)
-        ? order.items.map(item => {
-            const toppings = item.toppings?.length ? `<small>+ ${item.toppings.join(", ")}</small>` : "";
-            return `${item.item} ×${item.quantity}${toppings}`;
-          }).join("<br>")
-        : "";
-
-      tr.innerHTML = `
-        <td>${order.name || ""}</td>
-        <td>${order.phone || "—"}</td>
-        <td>${order.year || ""}</td>
-        <td>${orderDetails}</td>
-        <td>${(order.total || 0).toLocaleString()}</td>
-        <td>${order.time || ""}</td>
-        <td>${order.pickupTime || "—"}</td>
-        <td>
-          <button class="action-btn" onclick="markComplete('${key}')">Done</button>
-          <button class="action-btn" style="background:#b84f3c;" onclick="deleteOrder('${key}')">Delete</button>
-        </td>
-      `;
-      tbody.appendChild(tr);
+  window.submitOrder=()=>{
+    const name=document.getElementById("customerName").value.trim();
+    const phone=document.getElementById("customerPhone").value.trim();
+    const year=document.getElementById("yearSelect").value;
+    const pickup=document.getElementById("pickupTime").value;
+    if(!name||!phone||!year||!pickup||cart.length===0){alert("Please complete all fields.");return;}
+    const total=cart.reduce((t,i)=>t+i.price*i.quantity,0);
+    const order={name,phone,year,pickupTime:pickup,total,items:cart,time:new Date().toLocaleString()};
+    push(ref(db,"orders"),order).then(()=>{
+      document.getElementById("thankyouBox").style.display="block";
+      setTimeout(()=>document.getElementById("thankyouBox").style.display="none",3000);
+      cart=[];renderCart();
     });
-  });
-}
-
-// --- Mark Order Complete ---
-function markComplete(orderId) {
-  const db = getDatabase();
-  const orderRef = ref(db, 'orders/' + orderId);
-  update(orderRef, { completed: true });
-}
-
-// --- Delete Order ---
-function deleteOrder(orderId) {
-  if (!confirm("Delete this order?")) return;
-  const db = getDatabase();
-  const orderRef = ref(db, 'orders/' + orderId);
-  remove(orderRef);
-}
-
-// --- Clear Orders + Record Revenue (fixed version) ---
-document.getElementById("clearOrders").addEventListener("click", () => {
-  const orders = safeParse(localStorage.getItem("orders"), []);
-  if (!orders.length) {
-    alert("No orders to clear.");
-    return;
-  }
-
-  if (!confirm("Record today’s revenue and clear all orders?")) return;
-
-  const today = new Date().toLocaleDateString();
-  let total = 0;
-  const soldItems = {};
-
-  orders.forEach(o => {
-    if (!Array.isArray(o.items)) return;
-
-    o.items.forEach(i => {
-      const basePrice = Number(i.price) || 0;
-      const qty = Number(i.quantity) || 0;
-      let toppingCost = 0;
-
-      // Calculate topping price if toppings exist
-      if (Array.isArray(i.toppings) && i.toppings.length) {
-        i.toppings.forEach(t => {
-          // Extract numbers in parentheses e.g. (៛500)
-          const match = String(t).match(/\d+/);
-          const extra = match ? Number(match[0]) : 0;
-          toppingCost += extra;
-        });
-      }
-
-      const itemTotal = (basePrice + toppingCost) * qty;
-      total += itemTotal;
-
-      const itemName = i.item || "Unknown Item";
-      soldItems[itemName] = (soldItems[itemName] || 0) + qty;
-
-      if (Array.isArray(i.toppings)) {
-        i.toppings.forEach(t => {
-          const toppingLabel = String(t).replace(/\s*\(៛?\d+\)/, ""); // remove "(៛500)"
-          const combo = `${itemName} (+${toppingLabel})`;
-          soldItems[combo] = (soldItems[combo] || 0) + qty;
-        });
-      }
-    });
-  });
-
-// --- Update and preserve revenue history ---
-const existingLog = safeParse(localStorage.getItem("revenueLog"), {});
-const updatedLog = { ...existingLog };
-
-// If this date already exists, merge new totals and items
-if (updatedLog[today]) {
-  updatedLog[today].total = (updatedLog[today].total || 0) + total;
-
-  for (const [item, qty] of Object.entries(soldItems)) {
-    updatedLog[today].items[item] = (updatedLog[today].items[item] || 0) + qty;
-  }
-} else {
-  // Otherwise create a fresh entry for today
-  updatedLog[today] = {
-    total,
-    items: { ...soldItems }
-  };
-}
-
-// Save both main and backup so they stay synced
-localStorage.setItem("revenueLog", JSON.stringify(updatedLog));
-localStorage.setItem("revenueLog_backup", JSON.stringify(updatedLog));
-
-
-  // --- Clear all orders and backups properly ---
-  localStorage.setItem("orders", JSON.stringify([]));         // reset orders
-  localStorage.setItem("orders_backup", JSON.stringify([]));  // reset backup too
-  
-
-  // Refresh dashboard displays
-  loadOrders();
-  loadRevenue();
-  loadReviews();
-
-  alert(`Recorded ៛${total.toLocaleString()} for ${today}. Orders cleared and stock reset.`);
-});
-
-
-
-// --- Load Revenue ---
-function loadRevenue() {
-  const revenueLog = safeParse(localStorage.getItem("revenueLog"), {});
-  const tbody = document.querySelector("#revenueTable tbody");
-  tbody.innerHTML = "";
-
-  if (!Object.keys(revenueLog).length) {
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">No revenue recorded yet.</td></tr>';
-    return;
-  }
-
-  Object.entries(revenueLog).forEach(([date, data]) => {
-    const tr = document.createElement("tr");
-
-    // Sort items alphabetically for cleaner display
-    const sortedItems = Object.entries(data.items || {}).sort((a, b) =>
-      a[0].localeCompare(b[0])
-    );
-
-    // Make each item appear on its own line
-    const itemsSold = sortedItems
-      .map(([item, qty]) => `<div style="margin-bottom:3px;">• ${item}: <strong>${qty}</strong></div>`)
-      .join("") || "—";
-
-    tr.innerHTML = `
-      <td>${date}</td>
-      <td>៛${(data.total || 0).toLocaleString()}</td>
-      <td>${itemsSold}</td>
-      <td><button class="action-btn" onclick="deleteRevenue('${date}')">Delete</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
-function deleteRevenue(date) {
-  if (!confirm(`Delete revenue record for ${date}?`)) return;
-  const log = safeParse(localStorage.getItem("revenueLog"), {});
-  delete log[date];
-  localStorage.setItem("revenueLog", JSON.stringify(log));
-  loadRevenue();
-}
-
-// --- Reviews ---
-function loadReviews() {
-  const reviews = safeParse(localStorage.getItem("reviews"), []);
-  const list = document.getElementById("reviewsList");
-  const count = document.getElementById("reviewCount");
-  list.innerHTML = "";
-
-  if (!reviews.length) {
-    list.innerHTML = "<p>No reviews yet.</p>";
-    count.textContent = 0;
-    return;
-  }
-
-  count.textContent = reviews.length;
-  reviews.forEach((rev, i) => {
-    const div = document.createElement("div");
-    div.classList.add("review");
-    div.innerHTML = `
-      <strong>${i + 1}. ⭐ ${rev.rating || "N/A"}/5</strong>
-      <p>${rev.comment || ""}</p>
-      <button onclick="deleteReview(${i})">Delete</button>
-    `;
-    list.appendChild(div);
-  });
-}
-
-function deleteReview(i) {
-  const reviews = safeParse(localStorage.getItem("reviews"), []);
-  if (!confirm("Delete this review?")) return;
-  reviews.splice(i, 1);
-  localStorage.setItem("reviews", JSON.stringify(reviews));
-  loadReviews();
-}
-
-// --- Back Button ---
-document.getElementById("backBtn").addEventListener("click", () => {
-  window.location.href = "index.html";
-});
-
-// --- Restore Local Backup if Empty ---
-function restoreDataFromBackup() {
-  // Restore revenue if missing but backup exists
-  const revenue = localStorage.getItem("revenueLog");
-  const revenueBackup = localStorage.getItem("revenueLog_backup");
-  if (!revenue && revenueBackup) {
-    localStorage.setItem("revenueLog", revenueBackup);
-  }
-
-  // Restore orders if missing but backup exists
-  const orders = localStorage.getItem("orders");
-  const ordersBackup = localStorage.getItem("orders_backup");
-  if (!orders && ordersBackup) {
-    localStorage.setItem("orders", ordersBackup);
-  }
-
-  // Restore reviews if missing but backup exists
-  const reviews = localStorage.getItem("reviews");
-  const reviewsBackup = localStorage.getItem("reviews_backup");
-  if (!reviews && reviewsBackup) {
-    localStorage.setItem("reviews", reviewsBackup);
-  }
-}
-
-// --- Manual Reset Stock Button (improved: persistent + cross-tab notify) ---
-document.getElementById("resetStockBtn").addEventListener("click", () => {
-  if (!confirm("Are you sure you want to reset all stock to 20 each?")) return;
-
-  const newStock = {
-    "French Crepe": 20,
-    "Buchimgae": 20
   };
 
-  // Persist stock and backup
-  localStorage.setItem("stock", JSON.stringify(newStock));
-  localStorage.setItem("stock_backup", JSON.stringify(newStock));
-
-  // Also write a timestamp key so other pages can detect the update in any case
-  localStorage.setItem("stock_update_ts", Date.now().toString());
-
-  // Broadcast to other open tabs/windows using BroadcastChannel for instant update
-  try {
-    const bc = new BroadcastChannel('crepe_channel');
-    bc.postMessage({ type: 'stock_update', stock: newStock, ts: Date.now() });
-    // closing channel is optional; we close to be tidy
-    bc.close();
-  } catch (err) {
-    // BroadcastChannel may not be supported in very old browsers — ignore safely
-    console.warn('BroadcastChannel not available:', err);
-  }
-
-  alert("Stock successfully reset to 20 each!");
-});
-
-
-// --- Auto Refresh ---
-setInterval(() => {
-  loadOrders();
-  loadReviews();
-  loadRevenue();
-}, 2000);
-
-// --- Auto Refresh ---
-setInterval(() => {
-  loadOrders();
-  loadReviews();
-  loadRevenue();
-}, 2000);
-
-// --- Initial Load ---
-restoreDataFromBackup();
-loadOrders();
-loadRevenue();
-loadReviews();
-
-// --- Auto Backup Before Leaving ---
-window.addEventListener("beforeunload", () => {
-  const revenue = localStorage.getItem("revenueLog");
-  const orders = localStorage.getItem("orders");
-  const reviews = localStorage.getItem("reviews");
-
-  if (revenue) localStorage.setItem("revenueLog_backup", revenue);
-  if (orders) localStorage.setItem("orders_backup", orders);
-  if (reviews) localStorage.setItem("reviews_backup", reviews);
-});
-
-// 🔧 Fix: Instantly refresh menu when stock is reset in dashboard
-window.addEventListener("storage", (e) => {
-  if (e.key === "stock_update_ts") {
-    try {
-      const latestStock = JSON.parse(localStorage.getItem("stock"));
-      if (latestStock && typeof latestStock === "object") {
-        stock = latestStock;
-        localStorage.setItem("stock", JSON.stringify(stock));
-        if (typeof updateStockDisplay === "function") updateStockDisplay();
-      }
-    } catch (err) {
-      console.warn("Error applying reset stock:", err);
+  // Review System
+  const reviewsRef = ref(db, "reviews");
+  let selectedRating = 0;
+  window.openReviewModal=()=>{
+    document.getElementById("reviewModal").style.display="flex";
+    const stars=document.getElementById("ratingStars");
+    stars.innerHTML="";
+    for(let i=1;i<=5;i++){
+      const s=document.createElement("span");
+      s.textContent="★";
+      s.className="star";
+      s.onclick=()=>{selectedRating=i;updateStars();};
+      stars.appendChild(s);
     }
+  };
+  function updateStars(){
+    document.querySelectorAll("#ratingStars .star").forEach((s,i)=>s.classList.toggle("selected",i<selectedRating));
   }
-});
+  window.submitReview=()=>{
+    const comment=document.getElementById("reviewComment").value.trim();
+    if(selectedRating===0){alert("Select a rating.");return;}
+    push(reviewsRef,{rating:selectedRating,comment});
+    document.getElementById("reviewModal").style.display="none";
+    document.getElementById("reviewComment").value="";
+  };
+
+  onValue(reviewsRef,(snapshot)=>{
+    const data=snapshot.val();
+    if(!data)return;
+    const arr=Object.values(data);
+    const avg=(arr.reduce((t,r)=>t+r.rating,0)/arr.length).toFixed(1);
+    document.getElementById("avgRatingDisplay").textContent=`Average Rating: ${avg} ⭐ (${arr.length} reviews)`;
+    document.getElementById("reviewComments").innerHTML=arr.map(r=>`<p>⭐ ${r.rating} – ${r.comment}</p>`).join("");
+  });
+
+  document.getElementById("viewOrdersBtn").addEventListener("click",()=>{
+    const pass=prompt("Enter admin password:");
+    if(pass==="Patricia")window.location.href="dashboard.html";
+  });
 </script>
-</body>
-</html>
-
-
+~~~
